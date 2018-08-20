@@ -3,7 +3,7 @@
 
 """This script performs the necessary actions for collecting the latest IP addresses used by Amazon
 Web Services, Google Compute, and Microsoft Azure. At the end, all IP addresses are output to
-a CloudIPs.txt file.
+a CloudIPs.txt file. Each range is printed on a new line following a header naming the provider.
 """
 
 import requests
@@ -12,14 +12,17 @@ import dns.resolver
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 
+# Setup the DNS resolver without a short timeout
 resolver = dns.resolver.Resolver()
 resolver.timeout = 1
 resolver.lifetime = 1
 
+# The addresses listed in the providers' documentation for the latest addresses
 aws_uri =  "https://ip-ranges.amazonaws.com/ip-ranges.json"
 azure_uri = "https://www.microsoft.com/en-us/download/confirmation.aspx?id=41653"
 compute_uri = "_cloud-netblocks.googleusercontent.com"
 
+# Lists for holding the IP address ranges as they are collected
 aws_addresses = []
 azure_addresses = []
 compute_addresses = []
@@ -28,6 +31,7 @@ def get_dns_record(domain, record_type):
     """Simple function to get the specified DNS record for the target domain."""
     answer = resolver.query(domain, record_type)
     return answer
+
 
 # Fetch the JSON for the latest AWS IP ranges
 try:
@@ -96,19 +100,19 @@ if netblock_names:
 
 # Output an up-to-date list of all cloud IP address ranges for all three providers
 with open("CloudIPs.txt", "w") as output_file:
-    output_file.write("Amazon Web Services IPs:\n\n")
+    output_file.write("# Amazon Web Services IPs\n\n")
     for address in aws_addresses:
         output_file.write(address + "\n")
 
     output_file.write("\n")
 
-    output_file.write("Microsft Azure IPs:\n\n")
+    output_file.write("# Microsft Azure IPs\n\n")
     for address in azure_addresses:
         output_file.write(address + "\n")
 
     output_file.write("\n")
 
-    output_file.write("Google Compute IPs:\n\n")
+    output_file.write("# Google Compute IPs\n\n")
     for address in compute_addresses:
         output_file.write(address + "\n")
     
