@@ -4,6 +4,7 @@
 """This script performs the necessary actions for collecting the latest IP addresses used by Amazon
 Web Services, Google Compute, and Microsoft Azure. At the end, all IP addresses are output to
 a CloudIPs.txt file. Each range is printed on a new line following a header naming the provider.
+As discussed at https://posts.specterops.io/head-in-the-clouds-bd038bb69e48?gi=c33a4e051d6b
 """
 
 import requests
